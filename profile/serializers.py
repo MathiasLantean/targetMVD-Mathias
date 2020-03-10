@@ -78,10 +78,6 @@ class LoginSerializer(serializers.Serializer):
         if 'allauth' in settings.INSTALLED_APPS:
             user = self._validate_username(email, password)
 
-        else:
-            # Authentication without using allauth
-            user = self._validate_username_email(email, '', password)
-
         # Did we get back an active user?
         if user:
             if not user.is_active:
