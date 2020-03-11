@@ -19,11 +19,9 @@ class UserManagerTestCase(TestCase):
         self.assertFalse(user.is_staff)
 
     def test_can_create_user_empty_email(self):
-        # user = self.manager.create_user("", "password1234", gender=User.Gender.GENDER_MALE)
         self.assertRaises(ValueError, self.manager.create_user, email="", password="test1234", gender=2)
 
     def test_can_create_user_without_gender(self):
-        # user = self.manager.create_user("", "password1234", gender=User.Gender.GENDER_MALE)
         self.assertRaises(IntegrityError, self.manager.create_user, email="test@test.com", password="test1234")
 
     def test_can_create_superuser_ok(self):

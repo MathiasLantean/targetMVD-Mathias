@@ -87,7 +87,7 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = 'email'
 
 ACCOUNT_ADAPTER = 'profile.adapter.CustomAccountAdapter'
 
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 ACCOUNT_EMAIL_REQUIRED = True
 

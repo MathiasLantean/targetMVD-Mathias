@@ -5,26 +5,33 @@ from ..models import User
 
 
 class UserAuthTests(APITestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user_email = 'test@test.com'
+        cls.user_password = 'test123455'
+
     def setUp(self):
-        test_active_user = User.objects.create_user(email='default@default.com', password='hello123455', gender=3)
-        test_inactive_user = User.objects.create_user(email='default2@default2.com',
-                                                      password='hello123455',
-                                                      gender=3,
-                                                      is_active=False)
+        self.test_active_user = User.objects.create_user(email='default@default.com', password=self.user_password, gender=3)
+        self.test_inactive_user = User.objects.create_user(
+            email='default2@default2.com',
+            password=self.user_password,
+            gender=3,
+            is_active=False
+        )
 
     def test_sign_up_user_ok(self):
         url = reverse("auth:rest_register")
-        data = {'email': 'test@test.com',
+        data = {'email': self.user_email,
                 'gender': User.Gender.GENDER_MALE,
-                'password1': 'test123455',
-                'password2': 'test123455'}
+                'password1': self.user_password,
+                'password2': self.user_password}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIsNotNone(response.data.get('detail'))
+        self.assertIsNotNone(response.data.get('key'))
 
     def test_sign_up_user_wrong_password(self):
         url = reverse("auth:rest_register")
-        data = {'email': 'test@test.com',
+        data = {'email': self.user_email,
                 'gender': User.Gender.GENDER_MALE,
                 'password1': '',
                 'password2': ''}
@@ -33,47 +40,47 @@ class UserAuthTests(APITestCase):
 
     def test_sign_up_user_password_doesnt_match(self):
         url = reverse("auth:rest_register")
-        data = {'email': 'test@test.com',
+        data = {'email': self.user_email,
                 'gender': User.Gender.GENDER_MALE,
-                'password1': 'test1234556',
-                'password2': 'test123455'}
+                'password1': self.user_password,
+                'password2': 'test1234556'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_sign_up_user_duplicate_email(self):
         url = reverse("auth:rest_register")
-        data = {'email': 'default@default.com',
+        data = {'email': self.test_active_user.email,
                 'gender': User.Gender.GENDER_MALE,
-                'password1': 'test123455',
-                'password2': 'test123455'}
+                'password1': self.user_password,
+                'password2': self.user_password}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_log_in_ok(self):
         url = reverse("rest_login")
-        data = {'email': 'default@default.com',
-                'password': 'hello123455'}
+        data = {'email': self.test_active_user.email,
+                'password': self.user_password}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsNotNone(response.data.get('key'))
 
     def test_log_in_wrong(self):
         url = reverse("rest_login")
-        data = {'email': 'default@default.com',
-                'password': 'hello123'}
+        data = {'email': self.test_active_user.email,
+                'password': ''}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_log_in_inactive_user(self):
         url = reverse("rest_login")
-        data = {'email': 'default2@default2.com',
-                'password': 'hello123455'}
+        data = {'email': self.test_inactive_user.email,
+                'password': self.user_password}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_log_out_ok(self):
         url_login = reverse("rest_login")
-        data_login = {'email': 'default@default.com', 'password': 'hello123455'}
+        data_login = {'email': self.test_active_user.email, 'password': self.user_password}
         response_login = self.client.post(url_login, data_login, format='json')
         self.assertEqual(response_login.status_code, status.HTTP_200_OK)
         key = response_login.data.get('key')
