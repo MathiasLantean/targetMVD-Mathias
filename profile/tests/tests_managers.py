@@ -7,34 +7,45 @@ from profile.models import User
 
 class UserManagerTestCase(TestCase):
 
+    @classmethod
+    def setUpTestData(cls):
+        cls.user_email = 'test@test.com'
+        cls.user_password = 'test123455'
+
     def setUp(self):
         self.manager = UserManager()
         self.manager.model = get_user_model()
 
     def test_can_create_user_ok(self):
-        user = self.manager.create_user("test@test.com", "password1234", gender=User.Gender.GENDER_MALE)
+        user = self.manager.create_user(self.user_email, self.user_password, gender=User.Gender.GENDER_MALE)
         self.assertIsNotNone(user)
-        self.assertEqual(user.email, "test@test.com")
+        self.assertEqual(user.email, self.user_email)
         self.assertEqual(user.gender, User.Gender.GENDER_MALE)
         self.assertFalse(user.is_staff)
 
     def test_can_create_user_empty_email(self):
-        self.assertRaises(ValueError, self.manager.create_user, email="", password="test1234", gender=2)
+        self.assertRaises(ValueError, self.manager.create_user, email="", password=self.user_password, gender=2)
 
     def test_can_create_user_without_gender(self):
-        self.assertRaises(IntegrityError, self.manager.create_user, email="test@test.com", password="test1234")
+        user = self.manager.create_user(self.user_email, self.user_password)
+        self.assertIsNotNone(user)
+        self.assertEqual(user.email, self.user_email)
+        self.assertIsNone(user.gender)
+        self.assertFalse(user.is_staff)
 
     def test_can_create_superuser_ok(self):
-        user = self.manager.create_superuser("test@test.com", "password1234", gender=User.Gender.GENDER_FEMALE)
+        user = self.manager.create_superuser(self.user_email, self.user_password, gender=User.Gender.GENDER_FEMALE)
         self.assertIsNotNone(user)
-        self.assertEqual(user.email, "test@test.com")
+        self.assertEqual(user.email, self.user_email)
         self.assertEqual(user.gender, User.Gender.GENDER_FEMALE)
         self.assertTrue(user.is_staff)
 
     def test_can_create_superuser_false_is_superuser_flag(self):
-        self.assertRaises(ValueError,
-                          self.manager.create_superuser,
-                          email="test@test.com",
-                          password="test1234",
-                          is_superuser=False,
-                          gender=2)
+        self.assertRaises(
+            ValueError,
+            self.manager.create_superuser,
+            email=self.user_email,
+            password="test1234",
+            is_superuser=False,
+            gender=User.Gender.GENDER_FEMALE
+        )

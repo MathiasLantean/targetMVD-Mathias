@@ -69,7 +69,7 @@ class RegisterSerializer(serializers.Serializer):
     )
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
-    gender = serializers.ChoiceField(choices=User.Gender.choices)
+    gender = serializers.ChoiceField(required=False, choices=User.Gender.choices)
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
