@@ -13,11 +13,3 @@ class FacebookLogin(SocialLoginView):
 
 def facebook_token(request):
     return render(request, 'account/facebook_sign_up.html')
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer

@@ -16,15 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
-from profile.views import FacebookLogin, facebook_token
+from profile.views import facebook_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^rest/', include('rest_framework.urls')),
-    url(r'^auth/', include('dj_rest_auth.urls')),
-    url(r'^auth/registration/', include(('dj_rest_auth.registration.urls', 'auth'))),
-    url(r'^auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
-    url(r'^auth/facebooktoken/$', facebook_token, name='fb_token'),
-    url('^', include('allauth.account.urls')),
-    url('^api/', include(('profile.urls', 'app-profile'))),
+    url(r'^', include('allauth.account.urls')),
+    url(r'^api/v1/', include(('profile.urls', 'app-profile'))),
+
+    url(r'^facebook-token/$', facebook_token, name='fb_token'),
 ]
