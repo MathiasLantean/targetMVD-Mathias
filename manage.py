@@ -2,9 +2,13 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from dotenv import load_dotenv
+from pathlib import Path  # python3 only
+env_path = Path('.') / '.env'
 
 
 def main():
+    load_dotenv(dotenv_path=env_path)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'base.settings.develop')
     try:
         from django.core.management import execute_from_command_line
