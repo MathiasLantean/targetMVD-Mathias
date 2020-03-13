@@ -21,6 +21,7 @@ from profile.views import facebook_token
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^', include('allauth.account.urls')),
+    url(r'^', include('dj_rest_auth.urls')),
     url(r'^api/v1/', include(('profile.urls', 'app-profile'))),
 
     url(r'^facebook-token/$', facebook_token, name='fb_token'),
