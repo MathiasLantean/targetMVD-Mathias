@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'profile.apps.ProfileConfig',
 ]
 
-SITE_ID = 2
+SITE_ID = 3
 
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
