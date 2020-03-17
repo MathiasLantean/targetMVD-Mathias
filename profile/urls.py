@@ -1,12 +1,9 @@
-from django.conf.urls import url
-from django.urls import include
-from rest_framework import routers
-
-from profile.views import UserViewSet
-
-router = routers.SimpleRouter()
-router.register(r'users', UserViewSet, basename="users")
+from django.urls import path, include
+from profile.views import FacebookLogin
 
 urlpatterns = [
-    url(r'^', include(router.urls)),
+    path('', include('dj_rest_auth.urls')),
+    path('', include('allauth.account.urls')),
+    path('registration/', include(('dj_rest_auth.registration.urls', 'auth'))),
+    path('facebook/', FacebookLogin.as_view(), name='fb_login'),
 ]

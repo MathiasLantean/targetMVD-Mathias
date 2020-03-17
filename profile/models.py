@@ -12,7 +12,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         GENDER_FEMALE = 2
         GENDER_OTHER = 3
 
-    gender = models.IntegerField(choices=Gender.choices)
+    gender = models.IntegerField(choices=Gender.choices, null=True)
     email = models.EmailField(_('email address'), unique=True)
     date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     is_active = models.BooleanField(_('active'), default=True)

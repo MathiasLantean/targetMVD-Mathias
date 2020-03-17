@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from rest_framework import exceptions, serializers
@@ -8,8 +7,6 @@ from allauth.account.utils import setup_user_email
 from allauth.account import app_settings as allauth_settings
 from dj_rest_auth.serializers import LoginSerializer as dj_rest_auth_LoginSerializer
 from .models import User
-
-UserModel = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -69,7 +66,7 @@ class RegisterSerializer(serializers.Serializer):
     )
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
-    gender = serializers.ChoiceField(choices=User.Gender.choices)
+    gender = serializers.ChoiceField(required=False, choices=User.Gender.choices)
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
