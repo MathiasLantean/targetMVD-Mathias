@@ -9,8 +9,6 @@ from allauth.account import app_settings as allauth_settings
 from dj_rest_auth.serializers import LoginSerializer as dj_rest_auth_LoginSerializer
 from .models import User
 
-UserModel = get_user_model()
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
