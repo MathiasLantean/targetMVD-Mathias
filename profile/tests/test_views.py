@@ -132,7 +132,7 @@ class UserAuthTests(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_request_reset_password_email_werong_email(self):
+    def test_request_reset_password_email_wrong_email(self):
         url = reverse("rest_password_reset")
         data = {
             'email': 'wrong_email@wrong'
