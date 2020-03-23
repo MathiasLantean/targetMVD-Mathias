@@ -1,10 +1,6 @@
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
-from django.contrib.auth import get_user_model
 from django.shortcuts import render
-from rest_framework import viewsets
-from .serializers import UserSerializer
-User = get_user_model()
 
 
 class FacebookLogin(SocialLoginView):
@@ -13,3 +9,11 @@ class FacebookLogin(SocialLoginView):
 
 def facebook_token(request):
     return render(request, 'account/facebook_sign_up.html')
+
+
+def password_reset(request, uidb64=None, token=None):
+    context = {
+        'uidb64': uidb64,
+        'token': token,
+    }
+    return render(request, 'registration/password_reset.html', context)

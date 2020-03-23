@@ -14,12 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from profile.views import facebook_token
+from django.urls import path, re_path, include
+from profile.views import facebook_token, password_reset
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('api/v1/', include('profile.urls')),
     path('facebook-token/', facebook_token, name='fb_token'),
+    re_path(
+        r"^password/reset/key/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+        password_reset,
+        name="account_reset_password_from_key"
+    ),
 ]
