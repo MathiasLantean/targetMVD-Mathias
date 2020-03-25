@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # Third-Party Apps
     'rest_framework',
+    'rest_framework_gis',
     'rest_framework.authtoken',
     'dj_rest_auth',
     'dj_rest_auth.registration',
