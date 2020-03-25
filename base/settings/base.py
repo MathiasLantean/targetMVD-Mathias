@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
     # Local Apps
     'profile.apps.ProfileConfig',
+    'target.apps.TargetConfig',
 ]
 
 SITE_ID = 3
