@@ -15,6 +15,12 @@ class UserAuthTests(TestCase):
         cls.user_password = 'test123455'
 
     def setUp(self):
+        self.test_superuser = User.objects.create_user(
+            email='defaultadmin@defaultadmin.com',
+            password=self.user_password,
+            gender=1,
+            is_superuser=True
+        )
         self.test_active_user = User.objects.create_user(
             email='default@default.com',
             password=self.user_password,
@@ -177,3 +183,21 @@ class UserAuthTests(TestCase):
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_get_user_list_as_admin(self):
+        self.client.force_login(self.test_superuser)
+        url = reverse('user_list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), User.objects.all().count())
+
+    def test_get_user_list_as_common_user(self):
+        self.client.force_login(self.test_active_user)
+        url = reverse('user_list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_user_list_as_not_logged_user(self):
+        url = reverse('user_list')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
