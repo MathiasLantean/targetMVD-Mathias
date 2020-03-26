@@ -1,6 +1,3 @@
-import base64
-
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.gis.geos import Point
 from django.test import TestCase
 from django.urls import reverse
