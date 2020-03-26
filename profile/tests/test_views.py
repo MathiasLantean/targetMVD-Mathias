@@ -34,7 +34,7 @@ class UserAuthTests(TestCase):
         )
         token_generator = PasswordResetTokenGenerator()
         self.token = token_generator.make_token(self.test_active_user)
-        self.uid = (base64.b64encode(str(self.test_active_user.id).encode('ascii'))[:-2]).decode("utf-8")
+        self.uid = (base64.b64encode(str(self.test_active_user.id).encode('ascii'))).decode("utf-8")
 
     def test_sign_up_user_ok(self):
         url = reverse("auth:rest_register")
