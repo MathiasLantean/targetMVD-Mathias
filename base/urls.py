@@ -16,12 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path, include
 from profile.views import facebook_token, password_reset
+from target.views import target_map
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('api/v1/', include('target.urls')),
     path('api/v1/', include('profile.urls')),
     path('facebook-token/', facebook_token, name='fb_token'),
+    path('map/', target_map, name='target_map'),
     re_path(
         r"^password/reset/key/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
         password_reset,

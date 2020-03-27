@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # Third-Party Apps
     'rest_framework',
+    'rest_framework_gis',
     'rest_framework.authtoken',
     'dj_rest_auth',
     'dj_rest_auth.registration',
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
 
     # Local Apps
     'profile.apps.ProfileConfig',
+    'target.apps.TargetConfig',
 ]
 
 SITE_ID = 3
