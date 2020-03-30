@@ -2,7 +2,7 @@ import base64
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.test import TestCase
-from django.urls import reverse, NoReverseMatch
+from django.urls import reverse
 from rest_framework import status
 from ..models import User
 
