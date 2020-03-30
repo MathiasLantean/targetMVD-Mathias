@@ -1,5 +1,22 @@
 from django.contrib import admin
 from .models import Target, Topic
 
-admin.site.register(Target)
-admin.site.register(Topic)
+
+class TargetAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'title',
+        'radius',
+        'location',
+    )
+
+
+class TopicAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'photo',
+    )
+
+
+admin.site.register(Target, TargetAdmin)
+admin.site.register(Topic, TopicAdmin)
