@@ -4,18 +4,6 @@ from django.db import migrations, models
 import easy_thumbnails.fields
 
 
-def create_default_topic(apps, schema_editor):
-    topic_model = apps.get_model('target', 'Topic')
-    db_alias = schema_editor.connection.alias
-    topic_model.objects.using(db_alias).create(title='Default', photo=None)
-
-
-def reverse(apps, schema_editor):
-    topic_model = apps.get_model('target', 'Topic')
-    db_alias = schema_editor.connection.alias
-    topic_model.objects.using(db_alias).filter(title='Default').delete()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -31,5 +19,4 @@ class Migration(migrations.Migration):
                 ('photo', easy_thumbnails.fields.ThumbnailerImageField(blank=True, upload_to='topics')),
             ],
         ),
-        migrations.RunPython(create_default_topic, reverse)
     ]
