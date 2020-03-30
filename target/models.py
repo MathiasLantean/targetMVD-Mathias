@@ -8,7 +8,7 @@ class Topic(models.Model):
     photo = ThumbnailerImageField(upload_to='topics', blank=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.pk, self.title)
+        return f'{self.pk} - {self.title}'
 
 
 class Target(models.Model):
@@ -19,4 +19,4 @@ class Target(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, default=1, blank=False)
 
     def __str__(self):
-        return '{} - {}, {}'.format(self.pk, self.user.email, self.title)
+        return f'{self.pk} - {self.user.email}, {self.title}'
