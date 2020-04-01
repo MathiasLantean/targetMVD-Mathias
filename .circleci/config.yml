@@ -44,4 +44,9 @@ jobs:
           name: Running tests
           command: |
             . venv/bin/activate
-            python3 manage.py test
+            coverage run --source="." manage.py test
+      - run:
+          name: Checking coverage
+          command: |
+            . venv/bin/activate
+            coverage report --omit=venv/*,manage.py --fail-under=90
