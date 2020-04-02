@@ -31,20 +31,25 @@ jobs:
             . venv/bin/activate
             pip install --upgrade pip==20.0.2
       - run:
-          name: Installing GDAL
-          command: |
-            sudo apt-get install libgdal-dev
-      - run:
           name: Installing pip requirements
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r base/requirements/base.txt
       - run:
+          name: Checking PEP8 code style
+          command: |
+            . venv/bin/activate
+            flake8 --count --exclude=.git,*migrations*,venv/* --max-line-length=119
+      - run:
+          name: Installing GDAL
+          command: |
+            sudo apt-get install libgdal-dev
+      - run:
           name: Running tests
           command: |
             . venv/bin/activate
-            coverage run --source="." manage.py test
+            coverage run --omit=venv/* --source="." manage.py test
       - run:
           name: Checking coverage
           command: |
