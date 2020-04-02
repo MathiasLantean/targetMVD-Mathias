@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.db.utils import IntegrityError
 from django.test import TestCase
 from profile.managers import UserManager
 from profile.models import User

@@ -11,7 +11,11 @@ class UserAuthTests(APITestCase):
         cls.user_password = 'test123455'
 
     def setUp(self):
-        self.test_active_user = User.objects.create_user(email='default@default.com', password=self.user_password, gender=3)
+        self.test_active_user = User.objects.create_user(
+            email='default@default.com',
+            password=self.user_password,
+            gender=3
+        )
         self.test_inactive_user = User.objects.create_user(
             email='default2@default2.com',
             password=self.user_password,
