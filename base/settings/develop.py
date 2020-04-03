@@ -1,12 +1,13 @@
-from .base import *
+import os
+from .base import *  # noqa
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-INSTALLED_APPS += [
-]
+INSTALLED_APPS += [  # noqa
+]  # noqa
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
