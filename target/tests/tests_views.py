@@ -43,7 +43,13 @@ class TargetTests(TestCase):
             location=Point(-54.100002, -33.900002)
         )
 
+    def test_get_map_page_user_not_logged(self):
+        url = reverse('target_map')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
     def test_get_map_page_ok(self):
+        self.client.force_login(self.test_active_user)
         url = reverse('target_map')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
