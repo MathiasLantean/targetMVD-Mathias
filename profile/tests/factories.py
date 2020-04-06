@@ -7,7 +7,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
-    email = factory.Sequence(lambda n: 'user%d@user.com' % n)
+    email = factory.Sequence(lambda n: 'userTest%d@test.com' % n)
     gender = factory.Faker('random_element', elements=[x[0] for x in User.Gender.choices])
 
 
