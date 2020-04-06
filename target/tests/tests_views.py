@@ -1,46 +1,26 @@
 import io
 from PIL import Image
 
-from django.contrib.gis.geos import Point
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from profile.models import User
-from ..models import Target, Topic
+from target.models import Target, Topic
+from profile.tests.factories import AdminUserFactory, CommonUserFactory
+from target.tests.factories import TargetFactory, TopicFactory
 
 
 class TargetTests(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        cls.user_email = 'test@test.com'
-        cls.user_password = 'test123455'
-
     def setUp(self):
-        self.test_superuser = User.objects.create_user(
-            email='defaultadmin@defaultadmin.com',
-            password=self.user_password,
-            gender=1,
-            is_superuser=True
-        )
-        self.test_active_user = User.objects.create_user(
-            email='default@default.com',
-            password=self.user_password,
-            gender=3
-        )
-        self.test_target_uno = Target.objects.create(
+        self.test_superuser = AdminUserFactory()
+        self.test_active_user = CommonUserFactory()
+        self.test_target_uno = TargetFactory(
             user=self.test_superuser,
-            title='target test',
-            radius=45000.02,
-            location=Point(-56.164532, -34.901112)
         )
-        self.test_target_dos = Target.objects.create(
+        self.test_target_dos = TargetFactory(
             user=self.test_active_user,
-            title='target test',
-            radius=5000.99,
-            location=Point(-54.100002, -33.900002)
         )
 
     def test_get_map_page_ok(self):
@@ -87,26 +67,10 @@ class TargetTests(TestCase):
 
 class TopicTests(APITestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        cls.user_email = 'test@test.com'
-        cls.user_password = 'test123455'
-
     def setUp(self):
-        self.test_superuser = User.objects.create_user(
-            email='defaultadmin@defaultadmin.com',
-            password=self.user_password,
-            gender=1,
-            is_superuser=True
-        )
-        self.test_active_user = User.objects.create_user(
-            email='default@default.com',
-            password=self.user_password,
-            gender=3
-        )
-        self.test_topic = Topic.objects.create(
-            title='Test'
-        )
+        self.test_superuser = AdminUserFactory()
+        self.test_active_user = CommonUserFactory()
+        self.test_topic = TopicFactory()
 
     @classmethod
     def generate_photo_file(cls):

@@ -9,6 +9,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     email = factory.Sequence(lambda n: 'userTest%d@test.com' % n)
     gender = factory.Faker('random_element', elements=[x[0] for x in User.Gender.choices])
+    password = factory.PostGenerationMethodCall('set_password', 'defaultPassword')
 
 
 class AdminUserFactory(UserFactory):
