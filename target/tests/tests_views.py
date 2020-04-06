@@ -50,19 +50,40 @@ class TargetTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get('properties').get('user'), self.test_active_user.id)
 
-    def test_get_target_list_as_superuser(self):
+    def test_get_target_list_as_admin(self):
         self.client.force_login(self.test_superuser)
         url = reverse("target-list")
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data.get('features')), Target.objects.all().count())
 
-    def test_get_target_list_as_user(self):
+    def test_get_target_list_as_common_user(self):
         self.client.force_login(self.test_active_user)
         url = reverse("target-list")
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data.get('features')), Target.objects.filter(user=self.test_active_user).count())
+
+    def test_delete_target_ok(self):
+        self.client.force_login(self.test_active_user)
+        target_to_delete = TargetFactory(user=self.test_active_user)
+        url = reverse("target-detail", kwargs={'pk': target_to_delete.pk})
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_target_of_another_user_as_common_user(self):
+        self.client.force_login(self.test_active_user)
+        target_to_delete = TargetFactory()
+        url = reverse("target-detail", kwargs={'pk': target_to_delete.pk})
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_target_of_another_user_as_admin(self):
+        self.client.force_login(self.test_superuser)
+        target_to_delete = TargetFactory()
+        url = reverse("target-detail", kwargs={'pk': target_to_delete.pk})
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
 class TopicTests(APITestCase):
