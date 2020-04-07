@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -5,6 +6,7 @@ from .serializers import TargetSerializer, TopicSerializer
 from .models import Target, Topic
 
 
+@login_required(login_url='rest_login')
 def target_map(request):
     return render(request, 'target/map.html')
 
