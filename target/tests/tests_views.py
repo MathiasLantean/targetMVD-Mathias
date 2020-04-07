@@ -58,8 +58,8 @@ class TargetTests(TestCase):
         self.assertEqual(response.data.get('properties').get('user'), self.test_active_user.id)
 
     def test_create_more_targets_than_it_is_allowed(self):
-        initial_num_of_targets = Target.objects.filter(user=self.test_active_user).count()
-        for i in range(0, (settings.MAX_NUMBER_OF_TARGETS-initial_num_of_targets)):
+        initial_num_of_targets = self.test_active_user.target_set.count()
+        for i in range(0, (settings.MAX_NUMBER_OF_TARGETS - initial_num_of_targets)):
             TargetFactory(user=self.test_active_user)
 
         self.client.force_login(self.test_active_user)

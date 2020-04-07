@@ -12,7 +12,7 @@ class TargetSerializer(GeoFeatureModelSerializer):
         geo_field = 'location'
 
     def check_max_num_of_targets(self, user):
-        num_current_targets = Target.objects.filter(user=user).count()
+        num_current_targets = user.target_set.count()
         if num_current_targets >= settings.MAX_NUMBER_OF_TARGETS:
             msg = f"It is not possible to create more than {settings.MAX_NUMBER_OF_TARGETS} targets."
             raise serializers.ValidationError(msg)
