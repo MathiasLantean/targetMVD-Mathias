@@ -1,7 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from ..models import User
+from profile.models import User
+from profile.tests.factories import CommonUserFactory, InactiveUserFactory
 
 
 class UserAuthTests(APITestCase):
@@ -11,17 +12,8 @@ class UserAuthTests(APITestCase):
         cls.user_password = 'test123455'
 
     def setUp(self):
-        self.test_active_user = User.objects.create_user(
-            email='default@default.com',
-            password=self.user_password,
-            gender=3
-        )
-        self.test_inactive_user = User.objects.create_user(
-            email='default2@default2.com',
-            password=self.user_password,
-            gender=3,
-            is_active=False
-        )
+        self.test_active_user = CommonUserFactory(password=self.user_password)
+        self.test_inactive_user = InactiveUserFactory(password=self.user_password)
 
     def test_sign_up_user_ok(self):
         url = reverse("auth:rest_register")

@@ -1,33 +1,16 @@
-from django.contrib.gis.geos import Point
 from django.test import TestCase
 
-from profile.models import User
-from ..models import Target, Topic
+from profile.tests.factories import AdminUserFactory
+from target.tests.factories import TargetFactory, TopicFactory
 
 
 class TargetTests(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        cls.user_email = 'test@test.com'
-        cls.user_password = 'test123455'
-
     def setUp(self):
-        self.test_superuser = User.objects.create_user(
-            email='defaultadmin@defaultadmin.com',
-            password=self.user_password,
-            gender=1,
-            is_superuser=True,
-        )
-        self.test_topic = Topic.objects.create(
-            title='topic test',
-            photo=None,
-        )
-        self.test_target = Target.objects.create(
+        self.test_superuser = AdminUserFactory()
+        self.test_topic = TopicFactory()
+        self.test_target = TargetFactory(
             user=self.test_superuser,
-            title='target test',
-            radius=45000.02,
-            location=Point(-56.164532, -34.901112),
             topic=self.test_topic,
         )
 

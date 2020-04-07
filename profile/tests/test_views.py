@@ -4,7 +4,8 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from ..models import User
+from profile.models import User
+from profile.tests.factories import AdminUserFactory, CommonUserFactory, InactiveUserFactory
 
 
 class UserAuthTests(TestCase):
@@ -15,22 +16,14 @@ class UserAuthTests(TestCase):
         cls.user_password = 'test123455'
 
     def setUp(self):
-        self.test_superuser = User.objects.create_user(
-            email='defaultadmin@defaultadmin.com',
+        self.test_superuser = AdminUserFactory(
             password=self.user_password,
-            gender=1,
-            is_superuser=True
         )
-        self.test_active_user = User.objects.create_user(
-            email='default@default.com',
+        self.test_active_user = CommonUserFactory(
             password=self.user_password,
-            gender=3
         )
-        self.test_inactive_user = User.objects.create_user(
-            email='defaultinactive@default.com',
+        self.test_inactive_user = InactiveUserFactory(
             password=self.user_password,
-            gender=3,
-            is_active=False,
         )
         token_generator = PasswordResetTokenGenerator()
         self.token = token_generator.make_token(self.test_active_user)
