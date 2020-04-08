@@ -3,6 +3,7 @@ from PIL import Image
 
 from django.test import TestCase
 from django.urls import reverse
+from django.conf import settings
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -55,6 +56,22 @@ class TargetTests(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get('properties').get('user'), self.test_active_user.id)
+
+    def test_create_more_targets_than_it_is_allowed(self):
+        initial_num_of_targets = self.test_active_user.target_set.count()
+        for i in range(0, (settings.MAX_NUMBER_OF_TARGETS - initial_num_of_targets)):
+            TargetFactory(user=self.test_active_user)
+
+        self.client.force_login(self.test_active_user)
+        url = reverse("target-list")
+        data = {
+            "title": "Point",
+            "radius": 45000,
+            "location": "POINT (-42.796763 -5.077056)"
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertLessEqual(self.test_active_user.target_set.count(), settings.MAX_NUMBER_OF_TARGETS)
 
     def test_get_target_list_as_admin(self):
         self.client.force_login(self.test_superuser)
