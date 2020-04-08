@@ -21,8 +21,8 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('pk', 'email', 'gender', 'is_superuser')
-        read_only_fields = ('email', )
+        fields = ('pk', 'email', 'first_name', 'last_name', 'gender', 'is_superuser',)
+        read_only_fields = ('email', 'is_superuser',)
 
 
 class LoginSerializer(dj_rest_auth_LoginSerializer):
@@ -66,6 +66,8 @@ class RegisterSerializer(serializers.Serializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
     gender = serializers.ChoiceField(required=False, choices=User.Gender.choices)
+    first_name = serializers.CharField(required=False)
+    last_name = serializers.CharField(required=False)
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
@@ -87,7 +89,9 @@ class RegisterSerializer(serializers.Serializer):
         return {
             'password1': self.validated_data.get('password1', ''),
             'email': self.validated_data.get('email', ''),
-            'gender': self.validated_data.get('gender', '')
+            'gender': self.validated_data.get('gender', ''),
+            'first_name': self.validated_data.get('first_name', ''),
+            'last_name': self.validated_data.get('last_name', ''),
         }
 
     def save(self, request):
