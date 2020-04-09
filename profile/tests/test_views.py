@@ -1,14 +1,15 @@
 import base64
 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.test import TestCase
 from django.urls import reverse
+from rest_framework.test import APITestCase
 from rest_framework import status
+from faker import Faker
 from profile.models import User
 from profile.tests.factories import AdminUserFactory, CommonUserFactory, InactiveUserFactory
 
 
-class UserAuthTests(TestCase):
+class UserAuthTests(APITestCase):
 
     @classmethod
     def setUpTestData(cls):
@@ -33,7 +34,20 @@ class UserAuthTests(TestCase):
         url = reverse("auth:rest_register")
         data = {
             'email': self.user_email,
+            'first_name': Faker().first_name(),
+            'last_name': Faker().last_name(),
             'gender': User.Gender.GENDER_MALE,
+            'password1': self.user_password,
+            'password2': self.user_password,
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIsNotNone(response.data.get('key'))
+
+    def test_sign_up_user_ok_without_optional_fields(self):
+        url = reverse("auth:rest_register")
+        data = {
+            'email': self.user_email,
             'password1': self.user_password,
             'password2': self.user_password,
         }
@@ -176,6 +190,23 @@ class UserAuthTests(TestCase):
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_user_profile_ok(self):
+        user_to_edit = CommonUserFactory(gender=User.Gender.GENDER_FEMALE)
+        self.client.force_login(user_to_edit)
+        url = reverse('rest_user_details')
+        new_first_name = Faker().first_name()
+        new_last_name = Faker().last_name()
+        data = {
+            'gender': User.Gender.GENDER_MALE,
+            'first_name': new_first_name,
+            'last_name': new_last_name
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('first_name'), new_first_name)
+        self.assertEqual(response.data.get('last_name'), new_last_name)
+        self.assertEqual(response.data.get('gender'), User.Gender.GENDER_MALE)
 
     def test_get_user_list_as_admin(self):
         self.client.force_login(self.test_superuser)

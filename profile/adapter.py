@@ -13,8 +13,12 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         data = form.cleaned_data
         email = data.get('email')
         gender = data.get('gender')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
         user_email(user, email)
         user.gender = gender
+        user.first_name = first_name
+        user.last_name = last_name
         if 'password1' in data:
             user.set_password(data["password1"])
         else:

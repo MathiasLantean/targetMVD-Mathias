@@ -69,6 +69,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'FIELDS': [
             'id',
             'email',
+            'first_name',
+            'last_name',
             'gender',
         ],
         'EXCHANGE_TOKEN': True,
