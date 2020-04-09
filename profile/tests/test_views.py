@@ -4,6 +4,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+from faker import Faker
 from profile.models import User
 from profile.tests.factories import AdminUserFactory, CommonUserFactory, InactiveUserFactory
 
@@ -33,8 +34,8 @@ class UserAuthTests(APITestCase):
         url = reverse("auth:rest_register")
         data = {
             'email': self.user_email,
-            'first_name': 'NameTest',
-            'last_name': 'LastNameTest',
+            'first_name': Faker().first_name(),
+            'last_name': Faker().last_name(),
             'gender': User.Gender.GENDER_MALE,
             'password1': self.user_password,
             'password2': self.user_password,
@@ -194,8 +195,8 @@ class UserAuthTests(APITestCase):
         user_to_edit = CommonUserFactory(gender=User.Gender.GENDER_FEMALE)
         self.client.force_login(user_to_edit)
         url = reverse('rest_user_details')
-        new_first_name = 'new_first_name'
-        new_last_name = 'new_last_name'
+        new_first_name = Faker().first_name()
+        new_last_name = Faker().last_name()
         data = {
             'gender': User.Gender.GENDER_MALE,
             'first_name': new_first_name,

@@ -10,8 +10,8 @@ class UserManagerTestCase(TestCase):
     def setUpTestData(cls):
         cls.user_email = 'test@test.com'
         cls.user_password = 'test123455'
-        cls.user_first_name = 'userTestName'
-        cls.user_last_name = 'userTestLastName'
+        cls.user_first_name = 'user_test_name'
+        cls.user_last_name = 'user_test_last_name'
 
     def setUp(self):
         self.manager = UserManager()
