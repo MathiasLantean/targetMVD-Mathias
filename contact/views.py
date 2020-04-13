@@ -1,7 +1,7 @@
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
+from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from django.core.mail import send_mail
 
@@ -15,14 +15,14 @@ class InformationDetail(GenericViewSet, RetrieveModelMixin):
     serializer_class = InformationSerializer
 
 
-class SendQuestion(APIView):
+class SendQuestion(ViewSet):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def create(self, request):
         serializer = QuestionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
-        admin_users = User.objects.filter(is_superuser=True).values_list('email', flat=True)
+        admin_users = User.objects.filter(is_superuser=True, is_active=True).values_list('email', flat=True)
         send_mail(
             'You have a new question.',
             data.get('question'),

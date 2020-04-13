@@ -32,7 +32,7 @@ class SendQuestionTests(APITestCase):
 
     def test_send_question_ok(self):
         self.client.force_login(self.test_active_user)
-        url = reverse("send_question")
+        url = reverse("send-question-list")
         data = {
             "question": Faker().paragraph(nb_sentences=10),
         }
@@ -41,7 +41,7 @@ class SendQuestionTests(APITestCase):
 
     def test_send_question_empty(self):
         self.client.force_login(self.test_active_user)
-        url = reverse("send_question")
+        url = reverse("send-question-list")
         data = {
             "question": '',
         }
@@ -50,7 +50,7 @@ class SendQuestionTests(APITestCase):
 
     def test_send_question_wrong_payload(self):
         self.client.force_login(self.test_active_user)
-        url = reverse("send_question")
+        url = reverse("send-question-list")
         data = {
             "wrong": Faker().paragraph(nb_sentences=10),
         }
@@ -58,7 +58,7 @@ class SendQuestionTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_send_question_no_logged_user(self):
-        url = reverse("send_question")
+        url = reverse("send-question-list")
         data = {
             "question": Faker().paragraph(nb_sentences=10),
         }
