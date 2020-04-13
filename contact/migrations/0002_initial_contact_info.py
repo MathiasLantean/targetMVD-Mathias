@@ -8,7 +8,7 @@ def add_about_info(apps, schema_editor):
     Information.objects.create(title='about', detail='')
 
 
-def add_remove_info(apps, schema_editor):
+def remove_about_info(apps, schema_editor):
     Information = apps.get_model('contact', 'Information')
     Information.objects.get(title='about').delete()
 
@@ -20,5 +20,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_about_info, add_remove_info),
+        migrations.RunPython(add_about_info, remove_about_info),
     ]

@@ -1,7 +1,8 @@
-from django.urls import path
+from rest_framework import routers
 
 from contact.views import InformationDetail
 
-urlpatterns = [
-    path('information/<slug:pk>/', InformationDetail.as_view(), name='info'),
-]
+router = routers.SimpleRouter()
+router.register(r'information', InformationDetail, basename='info')
+
+urlpatterns = router.urls
