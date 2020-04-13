@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # Local Apps
     'profile.apps.ProfileConfig',
     'target.apps.TargetConfig',
+    'contact.apps.ContactConfig',
 ]
 
 SITE_ID = 3

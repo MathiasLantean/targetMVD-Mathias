@@ -59,8 +59,8 @@ class TargetTests(TestCase):
 
     def test_create_more_targets_than_it_is_allowed(self):
         initial_num_of_targets = self.test_active_user.target_set.count()
-        for i in range(0, (settings.MAX_NUMBER_OF_TARGETS - initial_num_of_targets)):
-            TargetFactory(user=self.test_active_user)
+        size = settings.MAX_NUMBER_OF_TARGETS - initial_num_of_targets
+        TargetFactory.create_batch(size, user=self.test_active_user)
 
         self.client.force_login(self.test_active_user)
         url = reverse("target-list")

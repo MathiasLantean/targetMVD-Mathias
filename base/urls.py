@@ -25,6 +25,7 @@ urlpatterns = [
 
     path('api/v1/', include('target.urls')),
     path('api/v1/', include('profile.urls')),
+    path('api/v1/', include('contact.urls')),
     path('facebook-token/', facebook_token, name='fb_token'),
     path('map/', target_map, name='target_map'),
     re_path(
