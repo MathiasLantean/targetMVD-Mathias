@@ -1,4 +1,5 @@
 from django.contrib.gis.db import models
+from django.db.models import F
 from easy_thumbnails.fields import ThumbnailerImageField
 from profile.models import User
 
@@ -20,3 +21,9 @@ class Target(models.Model):
 
     def __str__(self):
         return f'{self.pk} - {self.user.email}, {self.title}'
+
+    def get_matches(self):
+        return Target.objects.filter(
+            location__distance_lte=(self.location, self.radius + F('radius')),
+            topic=self.topic,
+        ).exclude(user=self.user)
