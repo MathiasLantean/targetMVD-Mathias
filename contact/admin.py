@@ -1,5 +1,5 @@
 from django.contrib import admin
-from contact.models import Information
+from contact.models import Information, Chat
 
 
 class InformationAdmin(admin.ModelAdmin):
@@ -14,4 +14,13 @@ class InformationAdmin(admin.ModelAdmin):
         return False
 
 
+class ChatAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'target_one',
+        'target_two',
+    )
+
+
 admin.site.register(Information, InformationAdmin)
+admin.site.register(Chat, ChatAdmin)
