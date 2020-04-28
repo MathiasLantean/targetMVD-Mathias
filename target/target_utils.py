@@ -1,7 +1,27 @@
+import os
+
+import onesignal as onesignal_sdk
+
 from django.db.models import Q
 
 from target.models import Target
 from contact.models import Chat
+
+
+def send_match_notification(username='Someone', user_ids=None):
+    if user_ids:
+        onesignal_client = onesignal_sdk.Client(
+            user_auth_key=os.getenv('ONESIGNAL_USER_AUTH_KEY'),
+            app_auth_key=os.getenv('ONESIGNAL_APP_AUTH_KEY'),
+            app_id=os.getenv('ONESIGNAL_APP_ID'))
+        notification = onesignal_sdk.Notification(post_body={
+            "contents": {"en": f"{username} has matched with you!"},
+            "include_external_user_ids": user_ids,
+        })
+        try:
+            onesignal_client.send_notification(notification)
+        except onesignal_sdk.error.OneSignalError:
+            print(f"Notification to {username} was not sent.")
 
 
 def manage_target_chats(target):
@@ -25,3 +45,7 @@ def manage_target_chats(target):
     for t in targets_without_chat.iterator():
         chat_list.append(Chat(target_one=target, target_two=t))
     Chat.objects.bulk_create(chat_list)
+
+    # Send match notifications
+    user_ids = list(targets_without_chat.values_list('user', flat=True))
+    send_match_notification(target.user.email, user_ids)
