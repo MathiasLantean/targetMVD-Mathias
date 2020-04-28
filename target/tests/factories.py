@@ -8,8 +8,8 @@ from target.models import Topic, Target
 class DjangoGeoPointProvider(BaseProvider):
 
     def geo_point(self, **kwargs):
-        kwargs.pop('coords_only', None)
-        faker = factory.Faker('local_latlng', coords_only=True, **kwargs)
+        kwargs['coords_only'] = True
+        faker = factory.Faker('local_latlng', **kwargs)
         coords = faker.generate()
         return Point(x=float(coords[1]), y=float(coords[0]), srid=4326)
 

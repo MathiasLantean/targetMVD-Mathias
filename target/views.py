@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rest_framework import viewsets
@@ -8,7 +10,10 @@ from .models import Target, Topic
 
 @login_required(login_url='rest_login')
 def target_map(request):
-    return render(request, 'target/map.html')
+    data = {
+        'google_api_key': os.getenv('GOOGLE_API_KEY')
+    }
+    return render(request, 'target/map.html', data)
 
 
 class TargetViewSet(viewsets.ModelViewSet):
