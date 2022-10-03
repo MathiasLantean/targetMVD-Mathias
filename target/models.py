@@ -1,4 +1,7 @@
 from django.contrib.gis.db import models
+from django.db.models import F
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from easy_thumbnails.fields import ThumbnailerImageField
 from profile.models import User
 
@@ -20,3 +23,16 @@ class Target(models.Model):
 
     def __str__(self):
         return f'{self.pk} - {self.user.email}, {self.title}'
+
+    def get_matches(self):
+        return Target.objects.filter(
+            location__distance_lte=(self.location, self.radius + F('radius')),
+            topic=self.topic,
+        ).exclude(user=self.user)
+
+
+@receiver(post_save, sender=Target)
+def chat_manager(sender, **kwargs):
+    from target.target_utils import manage_target_chats
+    target = kwargs.get('instance')
+    manage_target_chats(target)
