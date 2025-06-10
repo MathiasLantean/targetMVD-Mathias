@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Facebook</title>
+</head>
+<body>
+
+<script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '235475324160291',
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v6.0'
+        });
+
+        FB.AppEvents.logPageView();
+
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+
+    <fb:login-button
+      scope="public_profile,email"
+      onlogin="checkLoginState();">
+    </fb:login-button>
+
+    <p id="fb-key" style="max-width: 60%;word-wrap: break-word;"></p>
+    <button onclick="copyElementText('fb-key')">Copy Key</button>
+
+    <script>
+        function checkLoginState() {
+          FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+          });
+        }
+
+        function copyElementText(id) {
+            var text = document.getElementById(id).innerText;
+            var elem = document.createElement("textarea");
+            document.body.appendChild(elem);
+            elem.value = text;
+            elem.select();
+            document.execCommand("copy");
+            document.body.removeChild(elem);
+        }
+
+        function statusChangeCallback(response) {
+            document.getElementById("fb-key").innerHTML = response.authResponse.accessToken;
+        }
+
+    </script>
+
+</body>
+</html>

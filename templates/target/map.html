@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TargetMVD</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_api_key }}&callback=initMap"
+            async defer></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+        var OneSignal = window.OneSignal || [];
+        OneSignal.push(function() {
+            OneSignal.init({
+                appId: "4b054fd5-a320-44ff-8747-a2621099f7b9",
+            });
+        });
+
+        $.get("http://localhost:8000/api/v1/user/", function(data) {
+            OneSignal.push(function() {
+              OneSignal.setExternalUserId(data.pk);
+            });
+        });
+    </script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+    // Note: This example requires that you consent to location sharing when
+    // prompted by your browser. If you see the error "The Geolocation service
+    // failed.", it means you probably did not give permission for the browser to
+    // locate you.
+    let map, infoWindow;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 37.0902, lng: -95.7129},
+          zoom: 4.5
+        });
+        infoWindow = new google.maps.InfoWindow;
+
+
+        // Load GeoJSON.
+        var promise = $.getJSON("http://localhost:8000/api/v1/targets/"); //same as map.data.loadGeoJson();
+        promise.then(function(data){
+            map.data.addGeoJson(data,{idPropertyName:"id"});
+        });
+
+        var target_colors = {}
+        map.data.setStyle(function(feature) {
+            var geo = feature.getGeometry();
+            //when it's a point
+            if(geo.getType().toLowerCase()==='point'){
+                 //create a circle
+                 var user = feature.getProperty("user")
+                 target_colors[user] = target_colors[user] || ('#' + Math.floor(Math.random()*16777215).toString(16));
+                 feature.circle=new google.maps.Circle({map:map,
+                                                        center: geo.get(),
+                                                        radius: parseFloat(feature.getProperty("radius")),
+                                                        fillColor: target_colors[user],
+                                                        fillOpacity: 0.5,
+                                                        strokeWeight: 0});
+            }
+            return {
+                 visible:true
+            };
+        });
+    }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+                          'Error: The Geolocation service failed.' :
+                          'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.open(map);
+    }
+
+    </script>
+  </body>
+</html>
